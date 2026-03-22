@@ -1,6 +1,6 @@
 # Website-Project-Demos
 
-This repository is a **read-only mirror** of the code behind interactive demos on my portfolio site. It exists so visitors can inspect the implementation and offline training scripts. The **canonical demos** run on the website; this repo is not the primary deployment target.
+This repository is a **read-only mirror** of the code behind interactive demos on my portfolio site (https://cjlaidlaw.com/). It exists so visitors can inspect the implementation and offline training scripts. The **canonical demos** run on the website; this repo is not the primary deployment target.
 
 ## What’s in here
 
