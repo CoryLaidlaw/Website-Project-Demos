@@ -1,0 +1,113 @@
+{
+  "schema_version": "1.0",
+  "positive_class": {
+    "value": 1,
+    "raw_label": "bad",
+    "role": "phishing"
+  },
+  "negative_class": {
+    "value": 0,
+    "raw_label": "good",
+    "role": "legitimate"
+  },
+  "split": {
+    "method": "stratified_train_test",
+    "test_size": 0.2,
+    "random_state": 42,
+    "train_n": 60000,
+    "test_n": 15000
+  },
+  "load": {
+    "n_rows_total_file": 549346,
+    "n_rows_used": 75000,
+    "prevalence_phishing": 0.28474666666666665,
+    "label_counts": {
+      "bad": 21356,
+      "good": 53644
+    }
+  },
+  "models": [
+    {
+      "id": "logreg_char_tfidf",
+      "display_name": "Logistic regression + char TF-IDF",
+      "threshold": 0.5,
+      "metrics_test": {
+        "precision": 0.9102040816326531,
+        "recall": 0.9398267384687427,
+        "f1": 0.9247782513535306,
+        "accuracy": 0.9564666666666667,
+        "roc_auc": 0.9895549579638718,
+        "pr_auc": 0.9783854378526979,
+        "brier": 0.039760923285499815
+      },
+      "confusion_test": {
+        "tn": 10333,
+        "fp": 396,
+        "fn": 257,
+        "tp": 4014
+      },
+      "when_to_pick": [
+        "Best precision, recall, and F1 among these three on this hold-out split—use as the default unless you have a different cost tradeoff than 0.5 threshold assumes."
+      ],
+      "when_to_avoid": [
+        "Not a substitute for browser blocklists, TLS inspection, or human review in production."
+      ]
+    },
+    {
+      "id": "sgd_log_char_tfidf",
+      "display_name": "SGD (log loss) + char TF-IDF",
+      "threshold": 0.5,
+      "metrics_test": {
+        "precision": 0.8917808219178082,
+        "recall": 0.9145399203933505,
+        "f1": 0.9030169922552306,
+        "accuracy": 0.9440666666666667,
+        "roc_auc": 0.9832190249561366,
+        "pr_auc": 0.9658963842668263,
+        "brier": 0.0657837983660089
+      },
+      "confusion_test": {
+        "tn": 10255,
+        "fp": 474,
+        "fn": 365,
+        "tp": 3906
+      },
+      "when_to_pick": [
+        "Use this model if its precision/recall mix matches your cost tradeoff; compare the chart and table."
+      ],
+      "when_to_avoid": [
+        "Avoid as the sole choice when false positives are very costly—another model had higher precision.",
+        "Avoid when missing phishing is unacceptable—another model achieved higher recall."
+      ]
+    },
+    {
+      "id": "complement_nb_char_counts",
+      "display_name": "Complement Naive Bayes + char counts",
+      "threshold": 0.5,
+      "metrics_test": {
+        "precision": 0.8955151515151515,
+        "recall": 0.8649028330601732,
+        "f1": 0.8799428299190091,
+        "accuracy": 0.9328,
+        "roc_auc": 0.9786246197070813,
+        "pr_auc": 0.9476275254364299,
+        "brier": 0.062334477048335356
+      },
+      "confusion_test": {
+        "tn": 10298,
+        "fp": 431,
+        "fn": 577,
+        "tp": 3694
+      },
+      "when_to_pick": [
+        "Use this model if its precision/recall mix matches your cost tradeoff; compare the chart and table."
+      ],
+      "when_to_avoid": [
+        "Avoid as the sole choice when false positives are very costly—another model had higher precision.",
+        "Avoid when missing phishing is unacceptable—another model achieved higher recall."
+      ]
+    }
+  ],
+  "tradeoff_summary": "Phishing detection trades precision (blocking bad URLs without annoying users) against recall (catching abusive URLs). Metrics are on a single stratified hold-out split; they benchmark these pipelines on this snapshot, not production security.",
+  "results_id": "sha256-9de7375051837953"
+}

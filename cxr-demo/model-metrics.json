@@ -1,0 +1,67 @@
+{
+  "task": "binary_cxr_pediatric",
+  "classes": [
+    "NORMAL",
+    "PNEUMONIA"
+  ],
+  "label_encoding": {
+    "NORMAL": 0,
+    "PNEUMONIA": 1
+  },
+  "positive_class": "PNEUMONIA",
+  "input_size": [
+    224,
+    224
+  ],
+  "channels": 3,
+  "preprocessing": {
+    "resize": [
+      224,
+      224
+    ],
+    "mobilenet_v2_preprocess": "keras.applications.mobilenet_v2.preprocess_input (scale to [-1,1])"
+  },
+  "backbone": "MobileNetV2",
+  "split": {
+    "strategy": "stratified train/val/test",
+    "fractions": {
+      "train": 0.7,
+      "val": 0.15,
+      "test": 0.15
+    },
+    "random_seed": 42,
+    "counts": {
+      "train": 5971,
+      "val": 1279,
+      "test": 1280
+    }
+  },
+  "test_metrics": {
+    "accuracy": 0.9796875,
+    "precision_pneumonia": 0.9723076923076923,
+    "recall_pneumonia": 0.9875,
+    "f1_pneumonia": 0.9798449612403101,
+    "roc_auc": 0.9981274414062499
+  },
+  "confusion_matrix_test": {
+    "labels_row_true_col_pred": [
+      "NORMAL",
+      "PNEUMONIA"
+    ],
+    "matrix": [
+      [
+        622,
+        18
+      ],
+      [
+        8,
+        632
+      ]
+    ]
+  },
+  "limitations": [
+    "Educational demo only; not validated for clinical use.",
+    "Trained on a single public dataset; performance may not transfer to other scanners, ages, or sites.",
+    "Binary task only; does not distinguish viral vs bacterial pneumonia or other pathology."
+  ]
+}

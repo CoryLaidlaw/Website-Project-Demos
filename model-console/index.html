@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phishing URL model comparison — Cory Laidlaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav>
+    <a class="nav-logo" href="../index.html">CL</a>
+    <ul class="nav-links">
+      <li><a href="../index.html"><span class="nav-link-label">About</span></a></li>
+      <li class="nav-dropdown is-current">
+        <details>
+          <summary><span class="nav-link-label">Projects</span></summary>
+          <ul class="nav-submenu">
+            <li><a href="../dashboard/">Statistic Dashboard</a></li>
+            <li><a href="../etl-playground/">CSV Cleanup</a></li>
+            <li><a href="index.html" aria-current="page">Model Comparison</a></li>
+            <li><a href="../projects/cxr-demo/">Image Analysis</a></li>
+            <li><a href="../projects.html#previous-projects">Previous projects</a></li>
+            <li><a href="../projects.html">View all</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="../contact.html"><span class="nav-link-label">Contact</span></a></li>
+    </ul>
+  </nav>
+
+  <main id="top">
+    <p id="loadingLine" class="loading-line">Loading evaluation data…</p>
+    <div id="loadErr" hidden>
+      <strong>Could not load data.</strong>
+      <span id="loadErrMsg"></span>
+      <p style="margin-top:0.5rem;font-size:0.85rem">From the repo root: <code>python3 -m http.server 8080</code> then open <code>/model-console/</code></p>
+    </div>
+
+    <div id="app" hidden>
+      <div class="section-tag">// ML · Static evaluation</div>
+      <h1 id="heroTitle">Model comparison</h1>
+      <p class="lead" id="heroLead"></p>
+
+      <div class="meta-strip">
+        <div class="meta-card">
+          <h2>Dataset</h2>
+          <p id="stripDataset">—</p>
+        </div>
+        <div class="meta-card">
+          <h2>Split</h2>
+          <p id="stripSplit">—</p>
+        </div>
+        <div class="meta-card">
+          <h2>Sample</h2>
+          <p id="stripRows">—</p>
+        </div>
+      </div>
+
+      <div id="glossary">
+        <details>
+          <summary>Metric glossary</summary>
+          <dl id="glossaryBody"></dl>
+        </details>
+      </div>
+
+      <div class="grid-main">
+        <div class="panel">
+          <h2>Precision vs recall (test)</h2>
+          <p class="selected-hint">Higher and to the top-right is better for both axes. Toggle models to focus the chart and table.</p>
+          <div class="chart-wrap">
+            <canvas id="chartScatter" width="400" height="360" aria-label="Scatter chart of precision versus recall"></canvas>
+          </div>
+          <div id="modelToggles" class="model-toggles"></div>
+        </div>
+        <div class="panel">
+          <h2>Tradeoff</h2>
+          <p class="tradeoff-callout" id="tradeoffText"></p>
+          <p style="font-size:0.86rem;color:var(--muted);line-height:1.55">
+            At a fixed 0.5 probability threshold, improving recall often trades off precision. PR-AUC summarizes ranking quality on imbalanced data; pair it with the confusion counts on each card.
+          </p>
+        </div>
+      </div>
+
+      <h2 class="section-tag" style="margin-bottom:0.75rem;font-size:0.72rem">// Metrics table</h2>
+      <div class="metrics-table-wrap">
+        <table class="metrics" id="metricsTable">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1</th>
+              <th>PR-AUC</th>
+              <th>ROC-AUC</th>
+              <th>Brier</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h2 class="section-tag" style="margin-top:2rem;margin-bottom:0.75rem;font-size:0.72rem">// When to pick each model</h2>
+      <div id="modelCards" class="model-cards"></div>
+
+      <section class="limitations">
+        <h2>Limitations &amp; honesty</h2>
+        <ul id="limitationsList"></ul>
+      </section>
+
+      <footer class="page-foot" id="attrBlock"></footer>
+      <footer class="page-foot" style="margin-top:1rem;border:none;padding-top:0">
+        <span id="footerVersion"></span>
+      </footer>
+    </div>
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+    crossorigin="anonymous"
+  ></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

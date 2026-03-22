@@ -1,0 +1,31 @@
+{
+  "title": "Phishing URL classifier comparison",
+  "one_liner": "Offline-trained scikit-learn pipelines compared on a public URL dataset—static metrics and an explicit precision/recall tradeoff.",
+  "dataset_name": "Phishing site URLs (Kaggle)",
+  "dataset_path": "Raw CSV not vendored in this repo; download from Kaggle (see source_urls) into data/mlc-data/phishing_site_urls.csv to regenerate metrics.",
+  "source_urls": [
+    "https://www.kaggle.com/datasets/taruntiwarihp/phishing-site-urls"
+  ],
+  "license_note": "Dataset licensing on Kaggle includes Open Database License (ODbL) and Database Contents License (DbCL) v1.0; verify the dataset page for attribution and any share-alike obligations. This site is not affiliated with Kaggle.",
+  "methodology_note": "Labels are URL strings with binary flags good vs bad (phishing). Features are character n-gram bags: TF-IDF (char_wb) for linear models, binary char counts for Complement Naive Bayes. Preprocessing is fit inside each pipeline on the training split only. Evaluation uses a stratified 80/20 train/test split with a fixed random seed. Class imbalance is reported; linear models use class_weight='balanced' where applicable. No temporal split: URLs are not ordered by time—generalization to new campaigns is not established here.",
+  "limitations": [
+    "Train/test split is random, not time-based—campaigns shift over time (distribution shift).",
+    "Dataset may contain duplicated or near-duplicate URL patterns; we did not deduplicate aggressively.",
+    "Metrics are point estimates on one split; confidence intervals are not shown.",
+    "URL-only models are easy to evade; real systems combine blocklists, TLS, reputation, and user signals.",
+    "This page is educational; it is not a phishing filter and must not be used as sole protection."
+  ],
+  "metric_definitions": {
+    "precision": "Of URLs predicted phishing, what fraction were truly phishing (equivalently, 1 − FP rate among predicted positives).",
+    "recall": "Of truly phishing URLs, what fraction we caught (true positive rate).",
+    "f1": "Harmonic mean of precision and recall.",
+    "pr_auc": "Area under the precision–recall curve (average precision); informative under class imbalance.",
+    "roc_auc": "Area under the ROC curve; can be optimistic when negatives dominate.",
+    "brier": "Mean squared error of predicted probabilities vs labels (lower is better); only for models that output calibrated probabilities where applicable."
+  },
+  "last_data_build": "2026-03-21",
+  "results_file": "model-eval-results.json",
+  "schema_version": "1.0",
+  "build_tool": "scripts/build_model_eval.py",
+  "sklearn_version": "1.6.1"
+}

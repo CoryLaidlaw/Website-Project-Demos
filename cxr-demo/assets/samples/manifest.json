@@ -1,0 +1,40 @@
+{
+  "samples": [
+    {
+      "id": "s1",
+      "file": "sample_01.jpeg",
+      "trueLabel": "PNEUMONIA",
+      "limitationsNote": "Illustrative pneumonia case; opacity patterns vary\u2014do not infer diagnosis."
+    },
+    {
+      "id": "s2",
+      "file": "sample_02.jpeg",
+      "trueLabel": "NORMAL",
+      "limitationsNote": "Illustrative normal study; model may fail on atypical views or artifacts."
+    },
+    {
+      "id": "s3",
+      "file": "sample_03.jpg",
+      "trueLabel": "NORMAL",
+      "limitationsNote": "Illustrative normal study; model may fail on atypical views or artifacts."
+    },
+    {
+      "id": "s4",
+      "file": "sample_04.jpeg",
+      "trueLabel": "PNEUMONIA",
+      "limitationsNote": "Illustrative pneumonia case; opacity patterns vary\u2014do not infer diagnosis."
+    },
+    {
+      "id": "s5",
+      "file": "sample_05.jpg",
+      "trueLabel": "NORMAL",
+      "limitationsNote": "Illustrative normal study; model may fail on atypical views or artifacts."
+    },
+    {
+      "id": "s6",
+      "file": "sample_06.jpeg",
+      "trueLabel": "PNEUMONIA",
+      "limitationsNote": "Illustrative pneumonia case; opacity patterns vary\u2014do not infer diagnosis."
+    }
+  ]
+}

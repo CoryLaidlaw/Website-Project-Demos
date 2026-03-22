@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US grid mix — Cory Laidlaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e14;
+      --surface: #111720;
+      --surface2: #192030;
+      --border: #1e2c3f;
+      --accent: #00ff9d;
+      --text: #e8f0fe;
+      --muted: #6b7fa3;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      cursor: auto;
+      min-height: 100vh;
+      padding-bottom: 3rem;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.5;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: rgba(10,14,20,0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(30,44,63,0.5);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      align-items: stretch;
+      gap: 2rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+    .nav-links > li {
+      display: flex;
+      align-items: center;
+    }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links > li > a {
+      display: inline-flex;
+      align-items: center;
+    }
+    .nav-links .nav-link-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      line-height: 1.2;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a[aria-current="page"] { color: var(--accent); }
+
+    .nav-dropdown { position: relative; }
+    .nav-dropdown > details { position: relative; display: flex; flex-direction: column; align-items: stretch; }
+    .nav-dropdown summary {
+      display: inline-flex;
+      align-items: center;
+      list-style: none;
+      cursor: pointer;
+      color: var(--muted);
+      margin: 0;
+      padding: 0;
+      transition: color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .nav-dropdown summary::-webkit-details-marker { display: none; }
+    .nav-dropdown summary::marker { content: ''; }
+    .nav-dropdown summary:hover { color: var(--accent); }
+    .nav-dropdown details[open] > summary { color: var(--accent); }
+    .nav-dropdown.is-current > details > summary { color: var(--accent); }
+    .nav-dropdown summary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .nav-submenu {
+      position: absolute;
+      top: calc(100% + 0.65rem);
+      left: 0;
+      min-width: 200px;
+      margin: 0;
+      padding: 0.4rem 0;
+      list-style: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+      z-index: 1001;
+    }
+    .nav-submenu a {
+      display: block;
+      padding: 0.65rem 1.25rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      text-transform: none;
+      letter-spacing: 0.06em;
+    }
+    .nav-submenu a:hover { background: rgba(0,255,157,0.06); }
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6.5rem 1.5rem 2rem;
+    }
+    .hero-dash {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-dash .tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .hero-dash h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.75rem, 4vw, 2.35rem);
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+    .hero-dash p.lead {
+      color: var(--muted);
+      max-width: 52ch;
+      line-height: 1.65;
+      font-size: 0.98rem;
+    }
+    .meta-line {
+      margin-top: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+    .controls {
+      display: grid;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .control-block label.main-label {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .year-range-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+    .year-range-row output {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      min-width: 8rem;
+    }
+    input[type="range"] {
+      flex: 1;
+      min-width: 140px;
+      accent-color: var(--accent);
+    }
+    .fuel-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem 1.25rem;
+    }
+    .fuel-grid label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .fuel-grid input { accent-color: var(--accent); }
+    .btn-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    button.reset-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.55rem 1rem;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(0,255,157,0.45);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    button.reset-btn:hover {
+      background: rgba(0,255,157,0.08);
+    }
+    button.reset-btn:focus-visible,
+    .nav-links a:focus-visible,
+    input[type="range"]:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    .fuel-grid label:focus-within {
+      outline: 2px solid rgba(0,255,157,0.45);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+    .layout-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    @media (min-width: 960px) {
+      .layout-grid {
+        grid-template-columns: 1fr 320px;
+        align-items: start;
+      }
+    }
+    .charts-col { display: flex; flex-direction: column; gap: 2rem; }
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem 1.25rem 1.5rem;
+    }
+    .chart-card h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+    .chart-card .sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .chart-wrap {
+      position: relative;
+      height: 280px;
+    }
+    .chart-wrap.tall { height: 320px; }
+    .insights-panel {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.25rem;
+      position: sticky;
+      top: 5.5rem;
+    }
+    .insights-panel h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    .insight-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
+    .insight-list li {
+      padding-left: 1rem;
+      border-left: 2px solid rgba(0,255,157,0.35);
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .insight-list li strong {
+      display: block;
+      font-size: 0.72rem;
+      font-family: 'DM Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    .attribution {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .attribution a { color: var(--accent); }
+    .load-err {
+      color: #f87171;
+      padding: 2rem;
+      text-align: center;
+    }
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { gap: 0.75rem 1rem; justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a class="nav-logo" href="../index.html">CL</a>
+    <ul class="nav-links">
+      <li><a href="../index.html"><span class="nav-link-label">About</span></a></li>
+      <li class="nav-dropdown is-current">
+        <details>
+          <summary><span class="nav-link-label">Projects</span></summary>
+          <ul class="nav-submenu">
+            <li><a href="#main" aria-current="page">Statistic Dashboard</a></li>
+            <li><a href="../etl-playground/">CSV Cleanup</a></li>
+            <li><a href="../model-console/">Model Comparison</a></li>
+            <li><a href="../projects/cxr-demo/">Image Analysis</a></li>
+            <li><a href="../projects.html#previous-projects">Previous projects</a></li>
+            <li><a href="../projects.html">View all</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="../contact.html"><span class="nav-link-label">Contact</span></a></li>
+    </ul>
+  </nav>
+
+  <main id="main">
+    <p class="load-err" id="loadErr" hidden>Could not load dashboard data. Ensure you are serving the site from the repo root (not opening this file directly).</p>
+
+    <div id="app" hidden>
+      <header class="hero-dash">
+        <div class="tag">// Public data · Static dashboard</div>
+        <h1>How the US power mix shifted</h1>
+        <p class="lead" id="heroLead"></p>
+        <p class="lead" id="heroDisclaimer" style="font-size:0.85rem;margin-top:0.75rem;opacity:0.92;"></p>
+        <p class="meta-line" id="metaLine" aria-live="polite"></p>
+      </header>
+
+      <section class="controls" aria-label="Dashboard filters">
+        <div class="control-block">
+          <span class="main-label" id="yearLabel">Year range</span>
+          <div class="year-range-row">
+            <input type="range" id="yrMin" aria-labelledby="yearLabel" aria-describedby="yearOut">
+            <input type="range" id="yrMax" aria-labelledby="yearLabel" aria-describedby="yearOut">
+            <output id="yearOut" for="yrMin yrMax"></output>
+          </div>
+        </div>
+        <fieldset class="control-block" style="border:none;">
+          <legend class="main-label">Fuels shown</legend>
+          <div class="fuel-grid" id="fuelToggles"></div>
+        </fieldset>
+        <div class="btn-row">
+          <button type="button" class="reset-btn" id="resetBtn">Reset filters</button>
+        </div>
+      </section>
+
+      <div class="layout-grid">
+        <div class="charts-col">
+          <article class="chart-card">
+            <h2>Total generation</h2>
+            <p class="sub">Sum of selected fuels (annual)</p>
+            <div class="chart-wrap"><canvas id="chartTotal" aria-label="Line chart of total generation"></canvas></div>
+          </article>
+          <article class="chart-card">
+            <h2>Share of generation</h2>
+            <p class="sub">100% stacked — selected fuels only</p>
+            <div class="chart-wrap tall"><canvas id="chartMix" aria-label="Stacked bar chart of generation mix"></canvas></div>
+          </article>
+          <article class="chart-card">
+            <h2>Mix shift (early vs late window)</h2>
+            <p class="sub">Change in average share, first half of years vs second half</p>
+            <div class="chart-wrap"><canvas id="chartDelta" aria-label="Horizontal bar chart of share changes"></canvas></div>
+          </article>
+        </div>
+        <aside class="insights-panel" aria-label="Insights">
+          <h2>Insights</h2>
+          <ul class="insight-list" id="insights" aria-live="polite"></ul>
+        </aside>
+      </div>
+
+      <footer class="attribution" id="attribution">
+        <p id="attrSource"></p>
+        <p id="attrLicense"></p>
+        <p id="attrMethod"></p>
+      </footer>
+    </div>
+  </main>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+    integrity="sha384-9nhczxUqK87bcKHh20fSQcTGD4qq5GhayNYSYWqwBkINBhOfQLg/P5HG5lF1urn4"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+(function () {
+  const DATA_URL = '../data/eia-generation-annual.json';
+  const META_URL = '../data/eia-meta.json';
+  const DEBOUNCE_MS = 100;
+
+  /** @type {any} */
+  let ChartLib = null;
+  let chartTotal = null;
+  let chartMix = null;
+  let chartDelta = null;
+
+  let rawRows = [];
+  let fuels = [];
+  let meta = {};
+  let fuelLabels = {};
+  let fuelColors = {};
+  let defaultYearMin = 2001;
+  let defaultYearMax = 2023;
+  let debounceTimer = null;
+
+  const state = {
+    yearMin: defaultYearMin,
+    yearMax: defaultYearMax,
+    /** @type {Set<string>} */
+    activeFuels: new Set(),
+  };
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function chartAnim() {
+    return prefersReducedMotion() ? false : { duration: 450, easing: 'easeOutQuart' };
+  }
+
+  function getFilteredRows() {
+    return rawRows.filter((r) => r.year >= state.yearMin && r.year <= state.yearMax);
+  }
+
+  function activeFuelList() {
+    return fuels.filter((f) => state.activeFuels.has(f));
+  }
+
+  function rowTotal(row, list) {
+    let t = 0;
+    for (const f of list) t += row[f] || 0;
+    return t;
+  }
+
+  function pct(n, d) {
+    return d > 0 ? (100 * n) / d : 0;
+  }
+
+  function windSolarGWh(row, af) {
+    let n = 0;
+    if (af.includes('wind')) n += row.wind || 0;
+    if (af.includes('solar')) n += row.solar || 0;
+    return n;
+  }
+
+  function buildInsights(rows, af) {
+    if (rows.length === 0 || af.length === 0) {
+      return [{ title: 'Range', body: 'Adjust the year range or turn on at least one fuel.' }];
+    }
+
+    const first = rows[0];
+    const last = rows[rows.length - 1];
+    const t0 = rowTotal(first, af);
+    const t1 = rowTotal(last, af);
+    const coal0 = af.includes('coal') ? pct(first.coal, t0) : null;
+    const coal1 = af.includes('coal') ? pct(last.coal, t1) : null;
+    const ws0 =
+      af.includes('wind') || af.includes('solar') ? pct(windSolarGWh(first, af), t0) : null;
+    const ws1 =
+      af.includes('wind') || af.includes('solar') ? pct(windSolarGWh(last, af), t1) : null;
+    const gas0 = af.includes('gas') ? pct(first.gas, t0) : null;
+    const gas1 = af.includes('gas') ? pct(last.gas, t1) : null;
+
+    const n = rows.length;
+    const split = Math.ceil(n / 2);
+    const early = rows.slice(0, split);
+    const late = rows.slice(split);
+    const out = [];
+
+    if (coal0 != null && coal1 != null && rows.length >= 2) {
+      const drop = coal0 - coal1;
+      if (drop >= 5) {
+        out.push({
+          title: 'Coal',
+          body: `Coal fell from about ${coal0.toFixed(1)}% to ${coal1.toFixed(1)}% of selected generation (${first.year}→${last.year}), a drop of roughly ${drop.toFixed(1)} percentage points.`,
+        });
+      } else if (drop <= -2) {
+        out.push({
+          title: 'Coal',
+          body: `Coal’s share rose in this window (about ${coal1.toFixed(1)}% vs ${coal0.toFixed(1)}% in ${first.year}→${last.year}). Short windows can show weather or dispatch effects—check EIA for revisions.`,
+        });
+      } else {
+        out.push({
+          title: 'Coal',
+          body: `Coal moved from about ${coal0.toFixed(1)}% to ${coal1.toFixed(1)}% across the selected years.`,
+        });
+      }
+    }
+
+    if (ws0 != null && ws1 != null) {
+      const eWs =
+        early.reduce((a, r) => a + pct(windSolarGWh(r, af), rowTotal(r, af)), 0) /
+        (early.length || 1);
+      const lWs =
+        late.reduce((a, r) => a + pct(windSolarGWh(r, af), rowTotal(r, af)), 0) /
+        (late.length || 1);
+      if (ws1 >= 15 && ws0 < 15) {
+        out.push({
+          title: 'Wind + solar',
+          body: `Wind and solar together crossed about 15% of selected generation by ${last.year} (from ~${ws0.toFixed(1)}% in ${first.year}).`,
+        });
+      } else if (ws1 > ws0 + 3) {
+        out.push({
+          title: 'Wind + solar',
+          body: `Wind + solar grew from ~${ws0.toFixed(1)}% to ~${ws1.toFixed(1)}% of the mix in this window.`,
+        });
+      } else {
+        out.push({
+          title: 'Wind + solar',
+          body: `Early-window average wind+solar share ~${eWs.toFixed(1)}%; late-window ~${lWs.toFixed(1)}%.`,
+        });
+      }
+    }
+
+    if (gas0 != null && gas1 != null && rows.length >= 2) {
+      const dg = gas1 - gas0;
+      if (Math.abs(dg) >= 3) {
+        out.push({
+          title: 'Natural gas',
+          body: `Natural gas moved from ~${gas0.toFixed(1)}% to ~${gas1.toFixed(1)}% (${dg > 0 ? 'up' : 'down'} ~${Math.abs(dg).toFixed(1)} points).`,
+        });
+      }
+    }
+
+    if (af.includes('nuclear') && rows.length >= 2) {
+      const nu0 = pct(first.nuclear, t0);
+      const nu1 = pct(last.nuclear, t1);
+      if (Math.abs(nu1 - nu0) < 2) {
+        out.push({
+          title: 'Nuclear',
+          body: `Nuclear stayed a relatively steady slice of the selected mix (${nu0.toFixed(1)}% → ${nu1.toFixed(1)}%).`,
+        });
+      }
+    }
+
+    const totChange = t1 - t0;
+    if (Math.abs(totChange) > (t0 * 0.05) && af.length === fuels.length) {
+      out.push({
+        title: 'Total output',
+        body: `Total annual generation in the selection changed by about ${(100 * totChange / t0).toFixed(1)}% from ${first.year} to ${last.year} (selected fuels).`,
+      });
+    }
+
+    if (out.length < 3 && rows.length >= 3) {
+      const midY = rows[Math.floor(rows.length / 2)].year;
+      out.push({
+        title: 'Window',
+        body: `Showing ${rows.length} years (${first.year}–${last.year}). Compare early vs late in the bottom chart (split around ${midY}).`,
+      });
+    }
+
+    return out.slice(0, 5);
+  }
+
+  function renderInsights() {
+    const rows = getFilteredRows();
+    const af = activeFuelList();
+    const items = buildInsights(rows, af);
+    const ul = document.getElementById('insights');
+    ul.innerHTML = items.map(
+      (i) => `<li><strong>${i.title}</strong>${i.body}</li>`
+    ).join('');
+  }
+
+  function updateCharts() {
+    if (!ChartLib) return;
+    const rows = getFilteredRows();
+    const af = activeFuelList();
+    const labels = rows.map((r) => String(r.year));
+    const totals = rows.map((r) => rowTotal(r, af));
+
+    if (chartTotal) {
+      chartTotal.data.labels = labels;
+      chartTotal.data.datasets[0].data = totals;
+      chartTotal.data.datasets[0].label = `Total (${meta.unit || 'GWh'})`;
+      chartTotal.options.animation = chartAnim();
+      chartTotal.update();
+    }
+
+    if (chartMix) {
+      const datasets = af.map((f) => ({
+        label: fuelLabels[f] || f,
+        data: rows.map((r) => {
+          const t = rowTotal(r, af);
+          return t > 0 ? (100 * r[f]) / t : 0;
+        }),
+        backgroundColor: fuelColors[f] || '#888',
+        stack: 'mix',
+      }));
+      chartMix.data.labels = labels;
+      chartMix.data.datasets = datasets;
+      chartMix.options.animation = chartAnim();
+      chartMix.update();
+    }
+
+    if (chartDelta) {
+      const n = rows.length;
+      let dLabels = [];
+      let dData = [];
+      if (n >= 2 && af.length) {
+        const split = Math.ceil(n / 2);
+        const early = rows.slice(0, split);
+        const late = rows.slice(split);
+        dLabels = af.map((f) => fuelLabels[f] || f);
+        dData = af.map((f) => {
+          const e = early.reduce((a, r) => a + pct(r[f], rowTotal(r, af)), 0) / early.length;
+          const l = late.reduce((a, r) => a + pct(r[f], rowTotal(r, af)), 0) / late.length;
+          return l - e;
+        });
+      }
+      chartDelta.data.labels = dLabels;
+      chartDelta.data.datasets[0].data = dData;
+      chartDelta.options.animation = chartAnim();
+      chartDelta.update();
+    }
+
+    renderInsights();
+  }
+
+  function scheduleUpdate() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(updateCharts, DEBOUNCE_MS);
+  }
+
+  function syncYearSliders() {
+    const minEl = document.getElementById('yrMin');
+    const maxEl = document.getElementById('yrMax');
+    let a = parseInt(minEl.value, 10);
+    let b = parseInt(maxEl.value, 10);
+    if (a > b) {
+      const t = a;
+      a = b;
+      b = t;
+      minEl.value = String(a);
+      maxEl.value = String(b);
+    }
+    state.yearMin = a;
+    state.yearMax = b;
+    document.getElementById('yearOut').textContent = `${a} – ${b}`;
+  }
+
+  function initSliders() {
+    const minEl = document.getElementById('yrMin');
+    const maxEl = document.getElementById('yrMax');
+    minEl.min = maxEl.min = String(defaultYearMin);
+    minEl.max = maxEl.max = String(defaultYearMax);
+    minEl.value = String(state.yearMin);
+    maxEl.value = String(state.yearMax);
+    minEl.addEventListener('input', () => {
+      syncYearSliders();
+      scheduleUpdate();
+    });
+    maxEl.addEventListener('input', () => {
+      syncYearSliders();
+      scheduleUpdate();
+    });
+    syncYearSliders();
+  }
+
+  function initFuels() {
+    const host = document.getElementById('fuelToggles');
+    host.innerHTML = fuels.map((f) => {
+      const id = `fuel-${f}`;
+      return `<label><input type="checkbox" id="${id}" value="${f}" checked /> ${fuelLabels[f] || f}</label>`;
+    }).join('');
+    fuels.forEach((f) => state.activeFuels.add(f));
+    host.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        state.activeFuels.clear();
+        host.querySelectorAll('input:checked').forEach((x) => state.activeFuels.add(x.value));
+        updateCharts();
+      });
+    });
+  }
+
+  function resetFilters() {
+    state.yearMin = defaultYearMin;
+    state.yearMax = defaultYearMax;
+    document.getElementById('yrMin').value = String(defaultYearMin);
+    document.getElementById('yrMax').value = String(defaultYearMax);
+    syncYearSliders();
+    fuels.forEach((f) => state.activeFuels.add(f));
+    document.querySelectorAll('#fuelToggles input').forEach((x) => { x.checked = true; });
+    updateCharts();
+  }
+
+  function commonChartOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: chartAnim(),
+      plugins: {
+        legend: {
+          labels: { color: '#e8f0fe', font: { family: 'DM Sans', size: 11 } },
+        },
+      },
+      scales: {
+        x: {
+          ticks: { color: '#6b7fa3', maxRotation: 45, minRotation: 0 },
+          grid: { color: 'rgba(30,44,63,0.6)' },
+        },
+        y: {
+          ticks: { color: '#6b7fa3' },
+          grid: { color: 'rgba(30,44,63,0.6)' },
+        },
+      },
+    };
+  }
+
+  function createCharts() {
+    const ctx1 = document.getElementById('chartTotal').getContext('2d');
+    const ctx2 = document.getElementById('chartMix').getContext('2d');
+    const ctx3 = document.getElementById('chartDelta').getContext('2d');
+    ChartLib.defaults.color = '#6b7fa3';
+    ChartLib.defaults.borderColor = 'rgba(30,44,63,0.8)';
+
+    chartTotal = new ChartLib(ctx1, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Total',
+          data: [],
+          borderColor: '#00ff9d',
+          backgroundColor: 'rgba(0,255,157,0.12)',
+          fill: true,
+          tension: 0.25,
+          pointRadius: 2,
+          pointHoverRadius: 5,
+        }],
+      },
+      options: {
+        ...commonChartOptions(),
+        scales: {
+          ...commonChartOptions().scales,
+          y: { ...commonChartOptions().scales.y, beginAtZero: true },
+        },
+      },
+    });
+
+    chartMix = new ChartLib(ctx2, {
+      type: 'bar',
+      data: { labels: [], datasets: [] },
+      options: {
+        ...commonChartOptions(),
+        scales: {
+          x: { ...commonChartOptions().scales.x, stacked: true },
+          y: {
+            ...commonChartOptions().scales.y,
+            stacked: true,
+            max: 100,
+            ticks: { ...commonChartOptions().scales.y.ticks, callback: (v) => `${v}%` },
+          },
+        },
+      },
+    });
+
+    chartDelta = new ChartLib(ctx3, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Δ share (percentage points)',
+          data: [],
+          backgroundColor: 'rgba(0,255,157,0.55)',
+          borderColor: '#00ff9d',
+          borderWidth: 1,
+        }],
+      },
+      options: {
+        indexAxis: 'y',
+        ...commonChartOptions(),
+        plugins: {
+          ...commonChartOptions().plugins,
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.x >= 0 ? '+' : ''}${ctx.parsed.x.toFixed(1)} pp`,
+            },
+          },
+        },
+        scales: {
+          x: {
+            ticks: { color: '#6b7fa3', callback: (v) => `${v > 0 ? '+' : ''}${v}` },
+            grid: { color: 'rgba(30,44,63,0.6)' },
+          },
+          y: {
+            ticks: { color: '#e8f0fe' },
+            grid: { color: 'rgba(30,44,63,0.3)' },
+          },
+        },
+      },
+    });
+
+    updateCharts();
+  }
+
+  async function boot() {
+    try {
+      const [dataRes, metaRes] = await Promise.all([fetch(DATA_URL), fetch(META_URL)]);
+      if (!dataRes.ok || !metaRes.ok) throw new Error('fetch');
+      const data = await dataRes.json();
+      meta = await metaRes.json();
+      rawRows = data.rows;
+      fuels = data.fuels || ['coal', 'gas', 'nuclear', 'hydro', 'wind', 'solar', 'other'];
+      defaultYearMin = data.year_min;
+      defaultYearMax = data.year_max;
+      state.yearMin = defaultYearMin;
+      state.yearMax = defaultYearMax;
+      fuelLabels = meta.fuel_labels || {};
+      fuelColors = meta.fuel_colors || {};
+
+      document.getElementById('heroLead').textContent =
+        `${meta.title} — ${meta.geography}. Adjust the year range and fuels; every chart and the insight panel use the same filter state.`;
+      document.getElementById('heroDisclaimer').textContent = meta.disclaimer || '';
+      document.getElementById('metaLine').textContent =
+        `Scope: ${meta.time_grain} · Unit: ${meta.unit} · Data build: ${meta.last_data_build || '—'}`;
+
+      document.getElementById('attrSource').innerHTML =
+        `<strong>Source:</strong> ${meta.source_name}. Links: ${(meta.source_urls || [])
+          .map((u) => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`)
+          .join(' · ')}`;
+      document.getElementById('attrLicense').textContent = meta.license_note || '';
+      document.getElementById('attrMethod').textContent = meta.methodology_note || '';
+
+      document.getElementById('loadErr').hidden = true;
+      document.getElementById('app').hidden = false;
+
+      initSliders();
+      initFuels();
+      document.getElementById('resetBtn').addEventListener('click', resetFilters);
+
+      ChartLib = window.Chart;
+      if (!ChartLib) throw new Error('Chart.js failed to load');
+      createCharts();
+    } catch (e) {
+      document.getElementById('loadErr').hidden = false;
+      console.error(e);
+    }
+  }
+
+  boot();
+})();
+  </script>
+</body>
+</html>

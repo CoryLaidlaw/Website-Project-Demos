@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ETL Playground — Cory Laidlaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+  <nav>
+    <a class="nav-logo" href="../index.html">CL</a>
+    <ul class="nav-links">
+      <li><a href="../index.html"><span class="nav-link-label">About</span></a></li>
+      <li class="nav-dropdown is-current">
+        <details>
+          <summary><span class="nav-link-label">Projects</span></summary>
+          <ul class="nav-submenu">
+            <li><a href="../dashboard/">Statistic Dashboard</a></li>
+            <li><a href="index.html" aria-current="page">CSV Cleanup</a></li>
+            <li><a href="../model-console/">Model Comparison</a></li>
+            <li><a href="../projects/cxr-demo/">Image Analysis</a></li>
+            <li><a href="../projects.html#previous-projects">Previous projects</a></li>
+            <li><a href="../projects.html">View all</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="../contact.html"><span class="nav-link-label">Contact</span></a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="section-tag">// Portfolio — Data tooling</div>
+    <h1>ETL Playground</h1>
+    <p class="hero-lead">
+      A browser-only CSV cleaning lab: deterministic steps, a quick quality report, and download. No backend, no uploads to any server.
+    </p>
+
+    <div class="pii-callout" role="note">
+      <strong>Privacy:</strong> All parsing and cleaning run in your browser. Nothing is sent to a server. Do not paste sensitive or regulated personal data; use synthetic samples or non-sensitive test files.
+    </div>
+
+    <section class="data-section" aria-labelledby="data-in-heading">
+      <h2 id="data-in-heading">Data in</h2>
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab-btn" role="tab" aria-selected="true" aria-controls="panel-paste" id="tab-paste">Paste</button>
+        <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-upload" id="tab-upload">Upload</button>
+      </div>
+      <div id="panel-paste" class="tab-panel" role="tabpanel" aria-labelledby="tab-paste">
+        <label for="paste-area" class="visually-hidden">CSV text</label>
+        <textarea id="paste-area" placeholder="Paste CSV here (header row first)…" autocomplete="off" spellcheck="false"></textarea>
+      </div>
+      <div id="panel-upload" class="tab-panel" role="tabpanel" aria-labelledby="tab-upload" hidden>
+        <div class="file-row">
+          <input type="file" id="file-input" accept=".csv,text/csv,text/plain" />
+        </div>
+      </div>
+      <div style="margin-top:1rem;display:flex;flex-wrap:wrap;align-items:center;gap:1rem;">
+        <button type="button" class="btn btn-primary" id="btn-load">Load &amp; run pipeline</button>
+        <details class="sample-wrap">
+          <summary>Try sample</summary>
+          <div class="sample-menu">
+            <button type="button" data-sample="../data/etl-samples/customers_dirty.csv">Customers (dirty)</button>
+            <button type="button" data-sample="../data/etl-samples/sales_messy.csv">Sales (messy)</button>
+            <button type="button" data-sample="../data/etl-samples/events_log.csv">Events log</button>
+          </div>
+        </details>
+      </div>
+      <p id="status-load" class="status-line" aria-live="polite"></p>
+    </section>
+
+    <section class="data-section" aria-labelledby="pipeline-heading">
+      <h2 id="pipeline-heading">Cleaning pipeline</h2>
+      <p class="status-line" style="margin-bottom:1rem;">Six steps run after parse: trim/null tokens → dedupe (identical rows, then same normalized email when an <code>email</code> column exists and the table is not event-log-shaped) → infer types → coerce dates/numbers → winsorize numeric columns → impute missing letter+number ids when there is a single gap, format money-like columns to two decimals (empty amounts → 0.00), then drop rows that still have no id and fill other blanks with N/A.</p>
+      <div id="stepper" class="stepper">
+        <p class="empty-state">Load data to see pipeline steps.</p>
+      </div>
+    </section>
+
+    <section class="data-section" aria-labelledby="report-heading">
+      <h2 id="report-heading">Data quality report</h2>
+      <div id="report-panel">
+        <p class="empty-state">No report yet.</p>
+      </div>
+    </section>
+
+    <section class="data-section" aria-labelledby="preview-heading">
+      <h2 id="preview-heading">Preview</h2>
+      <div class="preview-grid">
+        <div class="preview-panel">
+          <h3>Before (parsed)</h3>
+          <div id="preview-before" class="table-scroll"><p class="empty-state">—</p></div>
+        </div>
+        <div class="preview-panel">
+          <h3>After (cleaned)</h3>
+          <div id="preview-after" class="table-scroll"><p class="empty-state">—</p></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="actions-bar">
+      <button type="button" class="btn btn-primary" id="btn-download" disabled>Download CSV</button>
+      <button type="button" class="btn btn-outline" id="btn-copy" disabled>Copy to clipboard</button>
+      <button type="button" class="btn btn-outline" id="btn-reset">Clear all</button>
+    </div>
+  </main>
+
+  <footer>
+    <span>© 2026 Cory Laidlaw · ETL Playground (client-side only)</span>
+  </footer>
+
+  <style>
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js" crossorigin="anonymous"></script>
+  <script src="pipeline.js"></script>
+  <script src="report.js"></script>
+  <script src="app.js"></script>
+  <script>
+    (function () {
+      var tabs = document.querySelectorAll('.tab-btn');
+      var panels = { 'panel-paste': document.getElementById('panel-paste'), 'panel-upload': document.getElementById('panel-upload') };
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var id = btn.getAttribute('aria-controls');
+          tabs.forEach(function (b) { b.setAttribute('aria-selected', b === btn ? 'true' : 'false'); });
+          Object.keys(panels).forEach(function (pid) { panels[pid].hidden = pid !== id; });
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pediatric chest X-ray demo — Cory Laidlaw</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="demo.css">
+</head>
+<body>
+  <nav>
+    <a class="nav-logo" href="../../index.html">CL</a>
+    <ul class="nav-links">
+      <li><a href="../../index.html"><span class="nav-link-label">About</span></a></li>
+      <li class="nav-dropdown is-current">
+        <details>
+          <summary><span class="nav-link-label">Projects</span></summary>
+          <ul class="nav-submenu">
+            <li><a href="../../dashboard/">Statistic Dashboard</a></li>
+            <li><a href="../../etl-playground/">CSV Cleanup</a></li>
+            <li><a href="../../model-console/">Model Comparison</a></li>
+            <li><a href="index.html" aria-current="page">Image Analysis</a></li>
+            <li><a href="../../projects.html#previous-projects">Previous projects</a></li>
+            <li><a href="../../projects.html">View all</a></li>
+          </ul>
+        </details>
+      </li>
+      <li><a href="../../contact.html"><span class="nav-link-label">Contact</span></a></li>
+    </ul>
+  </nav>
+
+  <p id="loadingLine" class="loading-line" role="status">Loading model and data…</p>
+  <div id="loadErr" hidden>
+    <strong>Could not load the demo.</strong>
+    <span id="loadErrMsg"></span>
+    <p style="margin-top:0.5rem;font-size:0.85rem;color:var(--muted)">Serve the site over HTTP (e.g. from repo root: <code>python3 -m http.server 8080</code>) then open <code>/projects/cxr-demo/</code></p>
+  </div>
+
+  <main id="app" hidden>
+    <p class="section-tag">// ML · Browser inference (samples)</p>
+    <h1>Pediatric chest X-ray: NORMAL vs PNEUMONIA</h1>
+    <p class="lead">Educational portfolio demo: a small MobileNetV2-based classifier runs entirely in your browser on curated public-domain samples. Not for clinical use.</p>
+
+    <div class="disclaimer" role="note">
+      <strong>Non-medical disclaimer</strong>
+      This page is for demonstrating machine learning on a public dataset only. It is not a medical device, not FDA cleared, and must not be used for diagnosis, screening, or treatment decisions.
+    </div>
+
+    <div class="grid-main">
+      <div class="panel">
+        <h2>Sample image</h2>
+        <div class="viewer-wrap">
+          <img id="mainImg" alt="Selected chest X-ray sample" width="448" height="448" decoding="async">
+        </div>
+        <div class="nav-sample">
+          <button type="button" class="btn btn-primary" id="btnPrev" aria-label="Previous sample">Previous</button>
+          <button type="button" class="btn btn-primary" id="btnNext" aria-label="Next sample">Next</button>
+          <span class="meta-strip" id="sampleMeta"></span>
+        </div>
+        <div>
+          <p class="label-mono" style="margin-top:1rem">Gallery</p>
+          <div class="thumb-grid" id="thumbGrid" role="tablist" aria-label="Select sample"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Model output</h2>
+        <p class="label-mono">Prediction</p>
+        <p class="prediction" id="predLabel" aria-live="polite">—</p>
+        <p class="label-mono">Confidence (predicted class)</p>
+        <div class="conf-bar" aria-hidden="true"><span id="confFill" style="width:0%"></span></div>
+        <p class="conf-text" id="confText">—</p>
+        <div class="note-block">
+          <span class="label">Limitations (this sample)</span>
+          <span id="sampleNote"></span>
+        </div>
+      </div>
+    </div>
+
+    <details class="model-details" id="modelCard">
+      <summary>Model card (lite)</summary>
+      <div class="inner">
+        <p class="meta-strip">Input: <span id="mcInput">—</span> · Preprocessing: <span id="mcPre">—</span></p>
+        <p class="meta-strip">Backbone: <span id="mcBackbone">—</span> · Split: <span id="mcSplit">—</span></p>
+        <p class="label-mono">Held-out test metrics</p>
+        <table class="metrics-table" id="mcMetricsTable">
+          <thead>
+            <tr><th>Metric</th><th>Value</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="label-mono" style="margin-top:1rem">Confusion matrix (test)</p>
+        <table class="metrics-table" id="mcCmTable">
+          <thead>
+            <tr><th></th><th id="cmPredN">Pred NORMAL</th><th id="cmPredP">Pred PNEUMONIA</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <p class="label-mono" style="margin-top:1rem">Limitations</p>
+        <ul class="limitations" id="mcLimits"></ul>
+      </div>
+    </details>
+
+    <footer class="site-footer">
+      <p><strong>Dataset:</strong> Pediatric Chest X-Ray Pneumonia — Balanced Dataset (Kaggle). License: CC0: Public Domain (verify on the <a href="https://www.kaggle.com/datasets/yusufmurtaza01/chest-xray-pneumonia-balanced-dataset" rel="noopener noreferrer">dataset page</a>).</p>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script src="app.js" type="module"></script>
+</body>
+</html>

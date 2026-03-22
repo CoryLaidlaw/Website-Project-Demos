@@ -1,0 +1,36 @@
+{
+  "title": "US net electricity generation by source",
+  "geography": "United States, all sectors",
+  "time_grain": "annual",
+  "unit": "GWh",
+  "unit_note": "Thousand megawatthours in EIA tables use the same numeric value as gigawatthours (GWh).",
+  "source_name": "U.S. Energy Information Administration (EIA)",
+  "source_urls": [
+    "https://www.eia.gov/opendata/browser/electricity/electric-power-operational-data",
+    "https://www.eia.gov/electricity/data.php",
+    "https://www.eia.gov/electricity/annual/"
+  ],
+  "methodology_note": "Annual net generation (GWh) from EIA Open Data API v2, route `electricity/electric-power-operational-data`, location=US, sectorid=99 (all sectors), frequency=annual, field `generation` (thousand megawatthours; numeric = GWh). Categories: coal=COW (all coal products), gas=NGO (natural gas & other gases), nuclear=NUC, hydro=HYC+HPS (conventional hydro + pumped storage), wind=WND, solar=TSN when reported else TPV else SUN+SPV+DPV+STH, other=residual so the seven fuels sum to EIA total ALL for each year.",
+  "license_note": "U.S. federal government data are generally not subject to copyright (public domain). This page is not affiliated with or endorsed by EIA.",
+  "disclaimer": "Pre-aggregated for this static site from the EIA API; not a live query in the browser. EIA may revise historical values.",
+  "last_data_build": "2026-03-19",
+  "fuel_labels": {
+    "coal": "Coal",
+    "gas": "Natural gas",
+    "nuclear": "Nuclear",
+    "hydro": "Hydroelectric",
+    "wind": "Wind",
+    "solar": "Solar",
+    "other": "Other (biomass, geothermal, petroleum, etc.)"
+  },
+  "fuel_colors": {
+    "coal": "#64748b",
+    "gas": "#f59e0b",
+    "nuclear": "#a78bfa",
+    "hydro": "#38bdf8",
+    "wind": "#00ff9d",
+    "solar": "#fde047",
+    "other": "#94a3b8"
+  },
+  "year_range_fetched": "2001\u20132024"
+}

@@ -1,0 +1,6 @@
+# macOS
+.DS_Store
+
+# Large / downloadable datasets (not vendored in this repo)
+cxr-demo/data/Chest-XRay-Pneumonia/
+model-console/data/mlc-data/phishing_site_urls.csv

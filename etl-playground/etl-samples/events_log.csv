@@ -1,0 +1,7 @@
+event_id,event_date,source
+E1,2024-03-01,web
+E2,03/15/2024,mobile
+E3,2024-03-20,web
+E1,2024-03-01,web
+E4,15/03/2024,api
+E5,2024-99-01,bad

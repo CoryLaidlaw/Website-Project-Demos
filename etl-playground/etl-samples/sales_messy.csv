@@ -1,0 +1,8 @@
+order_id,amount,region
+A1,"1,250.50",west
+A2,  99.0  ,east
+A3,not_a_number,north
+A4,500000,outlier
+A5,12.5,south
+,,east
+A7,"1,250.00",west

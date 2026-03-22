@@ -1,0 +1,4 @@
+# Offline scripts only (model comparison JSON). Not required to view the static site.
+scikit-learn>=1.3.0
+pandas>=2.0.0
+numpy>=1.24.0

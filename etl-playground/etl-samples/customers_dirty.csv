@@ -1,0 +1,9 @@
+customer_id,name,signup_date,email,notes
+1,  Alice Smith ,2023-01-15,alice@example.com,ok
+2,Bob Jones,01/15/2023,bob@example.com,
+3,  alice smith ,N/A,alice@example.com,duplicate spacing
+4,Carol White,2023-13-40,carol@example.com,bad date
+5,Dan Lee,null,dan@example.com,null token
+6,Eve Park,2023-06-01,eve@example.com,
+7,Fay Kim,06/01/2023,fay@example.com,US format
+8,Bob Jones,01/15/2023,bob@example.com,duplicate row
